@@ -1,7 +1,7 @@
-require("dotenv").config();
+require('dotenv').config();
 
-const { Client, GatewayIntentBits, Collection } = require('discord.js');
-const fs = require("fs");
+const { Client, GatewayIntentBits, Collection, ActivityType } = require('discord.js');
+const fs = require('fs');
 
 const client = new Client({
     intents: [
@@ -20,14 +20,21 @@ for (const file of commandFiles) {
 
 client.on('ready', () => {
     console.log('The bot is online!');
+
+    client.user.setPresence({ 
+        activities: [
+            { name: 'Code Geass', type: ActivityType.Watching }
+        ], 
+        status: 'idle' 
+    });
 });
 
 client.on('messageCreate', (msg) => {
-    if (!msg.content.trim().split(/ +/)[1] && !(msg.content === "@everyone" || msg.content === "@here") && !msg.author.bot && msg.mentions.has(client.user)) {
+    if (!msg.content.trim().split(/ +/)[1] && !(msg.content === '@everyone' || msg.content === '@here') && !msg.author.bot && msg.mentions.has(client.user)) {
         return msg.reply(`para saber meus comandos, digite \`${process.env.PREFIX}help\`.`);
     }
 
-    if (msg.author.bot || !msg.content.startsWith(process.env.PREFIX) || msg.channel.type === "DM") return;
+    if (msg.author.bot || !msg.content.startsWith(process.env.PREFIX) || msg.channel.type === 'DM') return;
 
     const args = msg.content.slice(process.env.PREFIX.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
@@ -48,7 +55,7 @@ client.on('messageCreate', (msg) => {
         command.execute(client, msg, args);
     } catch (error) {
         console.error(error);
-        msg.reply("houve um erro ao tentar executar esse comando...");
+        msg.reply('houve um erro ao tentar executar esse comando...');
     }
 });
 
